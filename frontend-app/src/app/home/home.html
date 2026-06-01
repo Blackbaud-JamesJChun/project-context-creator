@@ -1,0 +1,162 @@
+<section class="pcb-page">
+  <header class="pcb-page-hero">
+    <h1 class="pcb-page-title">Project Context Builder</h1>
+    <p class="pcb-page-subtitle">
+      Pull together everything we already know about a topic — research, decisions, competitive
+      intel, user signals — before you start the next project.
+    </p>
+  </header>
+
+  <div class="pcb-home-grid">
+    <!-- Wizard column -->
+    <div class="pcb-home-col-main">
+      <article class="pcb-card">
+        <h2 class="pcb-card-title">Start a new context brief</h2>
+        <form [formGroup]="form" (ngSubmit)="run()" class="pcb-form">
+          <label class="pcb-field">
+            <span class="pcb-label">Topic</span>
+            <input
+              class="sky-form-control"
+              type="text"
+              formControlName="topic"
+              placeholder="e.g. Donor onboarding, Mid-level retention, Gift batch errors"
+            />
+            <span class="pcb-hint">What feature, persona, workflow, or problem?</span>
+          </label>
+
+          <label class="pcb-field">
+            <span class="pcb-label">Decision in play</span>
+            <textarea
+              class="sky-form-control"
+              rows="2"
+              formControlName="decision"
+              placeholder="e.g. Scope an MVP for AI-assisted constituent matching"
+            ></textarea>
+            <span class="pcb-hint">What are you trying to decide with this context?</span>
+          </label>
+
+          <label class="pcb-field">
+            <span class="pcb-label">Time horizon</span>
+            <select class="sky-form-control" formControlName="timeHorizonMonths">
+              <option [ngValue]="6">Last 6 months</option>
+              <option [ngValue]="12">Last 12 months</option>
+              <option [ngValue]="24">Last 24 months (default)</option>
+              <option [ngValue]="36">Last 36 months</option>
+              <option [ngValue]="120">Last 10 years</option>
+            </select>
+          </label>
+
+          <fieldset class="pcb-fieldset">
+            <legend class="pcb-label">Analysis mode</legend>
+            <div class="pcb-radio-group">
+              @for (mode of analysisModes; track mode.value) {
+                <label class="pcb-radio-card" [class.pcb-radio-card-active]="form.controls.analysisMode.value === mode.value">
+                  <input type="radio" [value]="mode.value" formControlName="analysisMode" />
+                  <div>
+                    <div class="pcb-radio-title">{{ mode.label }}</div>
+                    <div class="pcb-radio-detail">{{ mode.detail }}</div>
+                  </div>
+                </label>
+              }
+            </div>
+          </fieldset>
+
+          <fieldset class="pcb-fieldset">
+            <legend class="pcb-label">
+              Data sources
+              <span class="pcb-hint">({{ selectedSourceCount() }} selected of {{ sources().length }})</span>
+            </legend>
+
+            @for (group of sourceGroups(); track group.tier) {
+              <div class="pcb-source-group">
+                <div class="pcb-source-group-header">
+                  <span class="pcb-source-group-title">{{ group.label }}</span>
+                  <button
+                    type="button"
+                    class="pcb-link-btn"
+                    (click)="toggleGroup(group.tier)"
+                  >
+                    {{ group.allSelected ? 'Clear group' : 'Select all in group' }}
+                  </button>
+                </div>
+                <div class="pcb-source-chips">
+                  @for (source of group.sources; track source.id) {
+                    <label class="pcb-chip" [class.pcb-chip-active]="isSelected(source.id)">
+                      <input
+                        type="checkbox"
+                        [checked]="isSelected(source.id)"
+                        (change)="toggleSource(source.id)"
+                      />
+                      <span>{{ source.label }}</span>
+                      @if (source.requiresExport) {
+                        <span class="pcb-pill pcb-pill-warn">export needed</span>
+                      }
+                    </label>
+                  }
+                </div>
+              </div>
+            }
+          </fieldset>
+
+          @if (anyExportSourceSelected()) {
+            <div class="pcb-alert pcb-alert-warn">
+              <strong>Manual export check.</strong>
+              <p>
+                You selected sources that need data uploaded. Did you export from any of these?
+                Paste the file paths below (comma-separated). If not, they'll be flagged as gaps.
+              </p>
+              <input
+                class="sky-form-control"
+                type="text"
+                formControlName="uploadedFiles"
+                placeholder="/path/to/dovetail.json, /path/to/aha.csv"
+              />
+            </div>
+          }
+
+          @if (errorMessage()) {
+            <div class="pcb-alert pcb-alert-error">{{ errorMessage() }}</div>
+          }
+
+          <div class="pcb-actions">
+            <button
+              type="submit"
+              class="pcb-btn pcb-btn-primary"
+              [disabled]="!form.valid || ctx.loading()"
+            >
+              @if (ctx.loading()) {
+                Analyzing…
+              } @else {
+                Gather context
+              }
+            </button>
+          </div>
+        </form>
+      </article>
+    </div>
+
+    <aside class="pcb-home-col-side">
+      <article class="pcb-card">
+        <h2 class="pcb-card-title">What you'll get</h2>
+        <ul class="pcb-bullet-list">
+          <li><strong>Top 5 findings</strong> ranked by recency, source authority, and agreement.</li>
+          <li><strong>Past decisions</strong> with the reasoning — so you don't redo them.</li>
+          <li><strong>Risks &amp; constraints</strong> from prior work and compliance.</li>
+          <li><strong>Gaps</strong> with recommended next research moves.</li>
+          <li><strong>Refinement questions</strong> to take into your next conversation.</li>
+        </ul>
+      </article>
+
+      <article class="pcb-card">
+        <h2 class="pcb-card-title">Or ask Copilot directly</h2>
+        <p class="pcb-hint">Same brief, conversational. In Copilot Chat, try:</p>
+        <pre class="pcb-codeblock">"Gather project context for {{ form.controls.topic.value || '[topic]' }}"</pre>
+        <p class="pcb-hint">
+          The <code>project-context-builder</code> skill activates on prompts like
+          "what do we already know about…" or "kick off discovery for…".
+        </p>
+      </article>
+    </aside>
+  </div>
+</section>
+

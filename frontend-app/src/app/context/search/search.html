@@ -1,0 +1,64 @@
+<h2 class="pcb-section-title">🔎 Search this context</h2>
+
+<form class="pcb-search-bar" (ngSubmit)="run()">
+  <input
+    class="sky-form-control"
+    type="search"
+    placeholder="Search findings, decisions, and risks…"
+    [ngModel]="query()"
+    (ngModelChange)="query.set($event)"
+    name="q"
+    autocomplete="off"
+  />
+  <button type="submit" class="pcb-btn pcb-btn-primary">Search</button>
+</form>
+
+@if (!searched()) {
+  <div class="pcb-empty">Enter a keyword to search across findings, decisions, and risks.</div>
+} @else {
+  <div class="pcb-search-results">
+    <section class="pcb-search-section">
+      <h3>Findings ({{ findings().length }})</h3>
+      @for (f of findings(); track f.id) {
+        <article class="pcb-finding">
+          <h3 class="pcb-finding-title">{{ f.title }}</h3>
+          <p class="pcb-finding-summary">{{ f.summary }}</p>
+          <div class="pcb-finding-meta">
+            <span>{{ f.sourceLabel }}</span>
+            <span>{{ f.date | date: 'mediumDate' }}</span>
+          </div>
+        </article>
+      } @empty {
+        <div class="pcb-empty">No findings matched.</div>
+      }
+    </section>
+
+    <section class="pcb-search-section">
+      <h3>Decisions ({{ decisions().length }})</h3>
+      @for (d of decisions(); track d.id) {
+        <article class="pcb-finding">
+          <h3 class="pcb-finding-title">{{ d.decision }}</h3>
+          <p class="pcb-finding-summary">{{ d.why }}</p>
+          <div class="pcb-finding-meta">
+            <span>{{ d.date | date: 'mediumDate' }}</span>
+            <span>{{ d.owner }}</span>
+          </div>
+        </article>
+      } @empty {
+        <div class="pcb-empty">No decisions matched.</div>
+      }
+    </section>
+
+    <section class="pcb-search-section">
+      <h3>Risks ({{ risks().length }})</h3>
+      @for (r of risks(); track r.id) {
+        <div class="pcb-risk">
+          <strong>{{ r.title }}</strong>
+          <p style="margin: 4px 0; font-size: 13px;">{{ r.reason }}</p>
+        </div>
+      } @empty {
+        <div class="pcb-empty">No risks matched.</div>
+      }
+    </section>
+  </div>
+}

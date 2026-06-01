@@ -1,0 +1,30 @@
+<h2 class="pcb-section-title">🗓️ Decision &amp; constraint timeline</h2>
+<p class="pcb-hint">Most recent first. Shows what was decided and why, plus standing constraints.</p>
+
+@if (entries().length === 0) {
+  <div class="pcb-empty">Nothing to show on the timeline yet.</div>
+} @else {
+  <div class="pcb-timeline">
+    @for (e of entries(); track e.id) {
+      <article class="pcb-timeline-item">
+        <div class="pcb-timeline-date">
+          {{ e.date | date: 'mediumDate' }}
+          ·
+          @if (e.kind === 'decision') {
+            <span class="pcb-pill pcb-pill-good">decision</span>
+          } @else if (e.kind === 'risk') {
+            <span class="pcb-pill pcb-pill-warn">constraint</span>
+          }
+        </div>
+        <div class="pcb-timeline-title">{{ e.title }}</div>
+        <p style="margin: 4px 0; font-size: 13px;">{{ e.body }}</p>
+        @if (e.owner || e.outcome) {
+          <div class="pcb-finding-meta">
+            @if (e.owner) { <span><strong>Owner:</strong> {{ e.owner }}</span> }
+            @if (e.outcome) { <span><strong>Outcome:</strong> {{ e.outcome }}</span> }
+          </div>
+        }
+      </article>
+    }
+  </div>
+}

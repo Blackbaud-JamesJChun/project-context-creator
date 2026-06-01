@@ -1,0 +1,35 @@
+<h2 class="pcb-section-title">📚 Sources scanned</h2>
+<p class="pcb-hint">All sources contributing data to this context brief.</p>
+
+@if (scanned().length === 0) {
+  <div class="pcb-empty">No sources returned data for the topic and time horizon.</div>
+} @else {
+  <table class="pcb-source-table">
+    <thead>
+      <tr>
+        <th>Source</th>
+        <th>Category</th>
+        <th>Tier</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (s of scanned(); track s.id) {
+        <tr>
+          <td><strong>{{ s.label }}</strong></td>
+          <td>{{ s.category }}</td>
+          <td>
+            <span class="pcb-pill" [class.pcb-pill-good]="s.tier === 'public'" [class.pcb-pill-warn]="s.tier === 'manual-export'">
+              {{ tierLabel(s.tier) }}
+            </span>
+          </td>
+          <td>
+            @if (s.url) {
+              <a [href]="s.url" target="_blank" rel="noopener">Open ↗</a>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

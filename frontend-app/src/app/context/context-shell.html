@@ -1,0 +1,54 @@
+@if (ctx.current(); as analysis) {
+  <section class="pcb-shell">
+    <header class="pcb-shell-header">
+      <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px;">
+        <div>
+          <div class="pcb-finding-rank">Project context</div>
+          <h1 class="pcb-page-title" style="font-size: 22px;">{{ analysis.topic }}</h1>
+          @if (analysis.decision) {
+            <p class="pcb-page-subtitle" style="margin-top: 6px;">
+              <strong>Decision in play:</strong> {{ analysis.decision }}
+            </p>
+          }
+        </div>
+        <a routerLink="/" class="pcb-btn pcb-btn-secondary">＋ New brief</a>
+      </div>
+
+      <div class="pcb-shell-meta">
+        <span>📅 Created {{ analysis.createdAt | date: 'medium' }}</span>
+        <span>🔭 Time horizon: last {{ analysis.timeHorizonMonths }} months</span>
+        <span>🔍 Sources scanned: {{ analysis.sourcesScanned.length }}</span>
+        <span>🧠 Mode: {{ analysis.analysisMode }}</span>
+      </div>
+    </header>
+
+    <nav class="pcb-tab-nav" aria-label="Context views">
+      <a
+        routerLink="dashboard"
+        routerLinkActive="pcb-tab-active"
+        class="pcb-tab"
+      >Dashboard</a>
+      <a
+        routerLink="timeline"
+        routerLinkActive="pcb-tab-active"
+        class="pcb-tab"
+      >Decision timeline</a>
+      <a
+        routerLink="search"
+        routerLinkActive="pcb-tab-active"
+        class="pcb-tab"
+      >Search</a>
+      <a
+        routerLink="sources"
+        routerLinkActive="pcb-tab-active"
+        class="pcb-tab"
+      >Sources</a>
+    </nav>
+
+    <router-outlet />
+  </section>
+} @else {
+  <section class="pcb-shell">
+    <div class="pcb-empty">Loading context…</div>
+  </section>
+}

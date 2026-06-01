@@ -1,0 +1,129 @@
+@if (ctx.current(); as analysis) {
+  <div class="pcb-dash-grid">
+    <div>
+      <h2 class="pcb-section-title">🎯 Top 5 key findings</h2>
+      @if (topFindings().length === 0) {
+        <div class="pcb-empty">No findings matched your topic and time horizon.</div>
+      }
+      @for (f of topFindings(); track f.id; let i = $index) {
+        <article class="pcb-finding pcb-finding-top">
+          <div class="pcb-finding-rank">#{{ i + 1 }} · Importance {{ f.importanceScore }}</div>
+          <h3 class="pcb-finding-title">{{ f.title }}</h3>
+          <p class="pcb-finding-summary">{{ f.summary }}</p>
+          <div class="pcb-finding-meta">
+            <span><strong>Source:</strong>
+              @if (f.url) {
+                <a [href]="f.url" target="_blank" rel="noopener">{{ f.sourceLabel }}</a>
+              } @else {
+                {{ f.sourceLabel }}
+              }
+            </span>
+            <span>{{ f.date | date: 'mediumDate' }}</span>
+            <span class="pcb-score-bar" title="Convergence across sources">
+              Convergence
+              <span class="pcb-score-track"><span class="pcb-score-fill" [style.width]="scoreWidth(f.convergenceScore)"></span></span>
+            </span>
+            <span class="pcb-score-bar" title="Recency">
+              Recency
+              <span class="pcb-score-track"><span class="pcb-score-fill" [style.width]="scoreWidth(f.recencyScore)"></span></span>
+            </span>
+          </div>
+          <div class="pcb-tags">
+            @for (tag of f.tags; track tag) {
+              <span class="pcb-tag">{{ tag }}</span>
+            }
+          </div>
+        </article>
+      }
+
+      @if (otherFindings().length > 0) {
+        <details>
+          <summary class="pcb-section-title" style="cursor: pointer;">
+            More findings ({{ otherFindings().length }})
+          </summary>
+          @for (f of otherFindings(); track f.id) {
+            <article class="pcb-finding">
+              <h3 class="pcb-finding-title">{{ f.title }}</h3>
+              <p class="pcb-finding-summary">{{ f.summary }}</p>
+              <div class="pcb-finding-meta">
+                <span>{{ f.sourceLabel }}</span>
+                <span>{{ f.date | date: 'mediumDate' }}</span>
+              </div>
+            </article>
+          }
+        </details>
+      }
+
+      <h2 class="pcb-section-title">🗂️ Past decisions (most recent first)</h2>
+      @if (decisions().length === 0) {
+        <div class="pcb-empty">No prior decisions found in the selected sources.</div>
+      } @else {
+        <table class="pcb-decisions-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>What was decided</th>
+              <th>Why</th>
+              <th>Owner</th>
+              <th>Outcome</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (d of decisions(); track d.id) {
+              <tr>
+                <td>{{ d.date | date: 'mediumDate' }}</td>
+                <td><strong>{{ d.decision }}</strong></td>
+                <td>{{ d.why }}</td>
+                <td>{{ d.owner }}</td>
+                <td>{{ d.outcome }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+
+    <aside>
+      <h2 class="pcb-section-title">⚠️ Risks &amp; constraints</h2>
+      @if (risks().length === 0) {
+        <div class="pcb-empty">No flagged risks in this scope.</div>
+      }
+      @for (r of risks(); track r.id) {
+        <div class="pcb-risk">
+          <strong>{{ r.title }}</strong>
+          <p style="margin: 4px 0; font-size: 13px;">{{ r.reason }}</p>
+          @if (r.previouslyRuledOut) {
+            <p style="margin: 4px 0; font-size: 12px; color: #686868;">
+              <em>Previously ruled out:</em> {{ r.previouslyRuledOut }}
+            </p>
+          }
+        </div>
+      }
+
+      <h2 class="pcb-section-title">🕳️ Gaps &amp; open questions</h2>
+      @if (gaps().length === 0) {
+        <div class="pcb-empty">No gaps flagged.</div>
+      }
+      @for (g of gaps(); track g.id) {
+        <div class="pcb-gap">
+          <strong>{{ g.description }}</strong>
+          <p style="margin: 4px 0; font-size: 12px;">
+            <em>Recommended next:</em> {{ g.recommendedNextStep }}
+          </p>
+        </div>
+      }
+
+      <h2 class="pcb-section-title">🧭 Refinement questions</h2>
+      <div class="pcb-card" style="padding: 14px;">
+        <p class="pcb-hint">Take these into your next conversation:</p>
+        <ol class="pcb-refine-list">
+          @for (q of refineQ(); track q) {
+            <li>{{ q }}</li>
+          }
+        </ol>
+      </div>
+    </aside>
+  </div>
+} @else {
+  <div class="pcb-empty">Loading…</div>
+}
