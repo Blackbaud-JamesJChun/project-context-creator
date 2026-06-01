@@ -1,0 +1,16 @@
+{
+  "topic": "<topic>",
+  "decision": "<decision>",
+  "timeHorizonMonths": 24,
+  "sources": [
+    "blackbaud-institute",
+    "givingusa",
+    "sharepoint-ux",
+    "dovetail"
+  ],
+  "uploadedFiles": [
+    "<optional path 1>",
+    "<optional path 2>"
+  ],
+  "analysisMode": "smart"
+}

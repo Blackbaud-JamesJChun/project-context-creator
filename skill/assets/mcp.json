@@ -1,0 +1,87 @@
+{
+  "servers": {
+    "rally-mcp": {
+      "type": "http",
+      "url": "https://mcp.rallyuxr.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:rallyApiToken}"
+      }
+    },
+    "dovetail-mcp": {
+      "type": "http",
+      "url": "https://dovetail.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:dovetailApiToken}"
+      }
+    },
+    "ado": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@azure-devops/mcp", "blackbaud"]
+    },
+    "miro": {
+      "type": "http",
+      "url": "https://mcp.miro.com/"
+    },
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "workiq": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@microsoft/workiq@latest", "mcp"]
+    },
+    "aha": {
+      "type": "http",
+      "url": "https://blackbaud.aha.io/api/v1/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:ahaApiToken}"
+      }
+    },
+    "salesforce": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@salesforce/mcp",
+        "--orgs",
+        "DEFAULT_TARGET_ORG",
+        "--toolsets",
+        "orgs,metadata,data,users,testing"
+      ]
+    },
+    "qlik": {
+      "type": "http",
+      "url": "https://blackbaudinsights.us.qlikcloud.com/api/v1/mcp"
+    },
+    "mixpanel": {
+      "type": "http",
+      "url": "https://mcp.mixpanel.com/mcp"
+    },
+    "heap": {
+      "type": "http",
+      "url": "https://mcp.pipedream.net/v2"
+    }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "rallyApiToken",
+      "description": "Rally UXR API token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "dovetailApiToken",
+      "description": "Dovetail API token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "ahaApiToken",
+      "description": "Aha! API token",
+      "password": true
+    }
+  ]
+}
