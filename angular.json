@@ -1,0 +1,113 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm",
+    "analytics": false
+  },
+  "newProjectRoot": "projects",
+  "schematics": {
+    "@schematics/angular:application": {
+      "testRunner": "karma"
+    },
+    "@schematics/angular:library": {
+      "testRunner": "karma"
+    }
+  },
+  "projects": {
+    "project-context-builder": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@blackbaud-internal/skyux-angular-builders:browser",
+          "options": {
+            "allowedCommonJsDependencies": [
+              "@blackbaud-internal/help-client",
+              "@skyux/icons",
+              "autonumeric",
+              "fontfaceobserver",
+              "intl-tel-input",
+              "moment"
+            ],
+            "assets": ["src/assets"],
+            "index": "src/index.html",
+            "inlineStyleLanguage": "scss",
+            "main": "src/main.ts",
+            "outputPath": "dist/project-context-builder",
+            "polyfills": ["zone.js"],
+            "styles": [
+              "src/styles.scss",
+              "@skyux/theme/css/sky.css",
+              "@skyux/theme/css/themes/modern/styles.css"
+            ],
+            "tsConfig": "tsconfig.app.json"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "800kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "bundles"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@blackbaud-internal/skyux-angular-builders:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "project-context-builder:build:production"
+            },
+            "development": {
+              "buildTarget": "project-context-builder:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@blackbaud-internal/skyux-angular-builders:karma",
+          "options": {
+            "assets": ["src/assets"],
+            "codeCoverage": true,
+            "codeCoverageExclude": ["**/fixtures/**", "*.fixture.ts", "*.spec.ts"],
+            "polyfills": ["zone.js", "zone.js/testing"],
+            "styles": [
+              "src/styles.scss",
+              "@skyux/theme/css/sky.css",
+              "@skyux/theme/css/themes/modern/styles.css"
+            ],
+            "tsConfig": "tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@blackbaud-internal/skyux-angular-builders:lint"
+        }
+      }
+    }
+  }
+}

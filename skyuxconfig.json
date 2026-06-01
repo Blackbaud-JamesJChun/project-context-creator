@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/@blackbaud-internal/skyux-angular-builders/skyuxconfig-schema.json",
+  "angularSettings": {
+    "defaultProject": "project-context-builder"
+  },
+  "app": {
+    "theming": {
+      "supportedThemes": ["modern"],
+      "theme": "modern"
+    }
+  },
+  "auth": false,
+  "host": {
+    "csp": {
+      "enabled": true,
+      "directives": {
+        "style-src": ["'nonce-{value}'"]
+      }
+    },
+    "frameOptions": {
+      "none": true
+    },
+    "url": "https://app.blackbaud.com"
+  },
+  "omnibar": {}
+}

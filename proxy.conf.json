@@ -1,0 +1,15 @@
+{
+  "/api/**": {
+    "target": "http://localhost:4300",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/project-context-builder/api/**": {
+    "target": "http://localhost:4300",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/project-context-builder": "" },
+    "logLevel": "debug"
+  }
+}
